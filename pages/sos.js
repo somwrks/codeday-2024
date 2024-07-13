@@ -1,17 +1,42 @@
 // pages/sos.js
 import Navbar from "@/components/Navbar";
 import dynamic from "next/dynamic";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const Navigate = dynamic(() => import("../components/Navigate"), {
   ssr: false,
 });
+const MapContainer = dynamic(() => import("../components/MapContainer"), {
+  ssr: false,
+});
 
-export default function SOS({usertype}) {
-  const [location, setLocation] = useState("")
+export default function SOS({ usertype }) {
+  const [location, setLocation] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [prompt, setPrompt] = useState(true);
+  const [news, setNews] = useState([]);
 
+  useEffect(() => {
+    const fetchNewsLocations = async () => {
+      try {
+        const response = await fetch("/api/getnews");
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log("Data:", data);
+          setNews(data.news);
+
+        } else {
+          console.error("Failed to fetch news locations");
+        }
+      } catch (error) {
+        console.error("Error fetching news locations:", error);
+      }
+    };
+
+    fetchNewsLocations();
+  }, []);
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -33,6 +58,11 @@ export default function SOS({usertype}) {
 
       if (response.ok) {
         console.log("News posted successfully");
+        setPrompt(true);
+        alert("Waiting for dispatch");
+        setTimeout(() => {
+          setPrompt(false);
+        }, 5000);
         setTitle("");
         setDescription("");
       } else {
@@ -45,23 +75,27 @@ export default function SOS({usertype}) {
 
   return (
     <>
-    {usertype ==="department" ?"" 
-: 
-    <>
-      <div style={{ position: "relative", width: "100vw", height: "95vh" }}>
-        <Navigate
-          handleSubmit={handleSubmit}
-          setDescription={setDescription}
-          description={description}
-          setLocation={setLocation}
-          title={title}
-          setTitle={setTitle}
-        />
-      </div>
-      <Navbar />
-    </>
-
-    }
+      {usertype === "department" ? (
+        <div style={{ position: "relative", width: "100vw", height: "95vh" }}>
+        <MapContainer news={news} />
+        </div>
+      ) : (
+        <>
+          <div style={{ position: "relative", width: "100vw", height: "95vh" }}>
+            <Navigate
+              handleSubmit={handleSubmit}
+              setDescription={setDescription}
+              description={description}
+              setPrompt={setPrompt}
+              usertype={usertype}
+              setLocation={setLocation}
+              title={title}
+              setTitle={setTitle}
+            />
+          </div>
+        </>
+      )}
+          <Navbar />
     </>
   );
 }

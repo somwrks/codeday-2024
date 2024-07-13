@@ -24,11 +24,11 @@ export default async function handler(req, res) {
 
       await sql`
         INSERT INTO users (userid, email, name, type)
-        VALUES (${userId}, ${email}, ${name}, ${type})
+        VALUES (${userId}, ${email}, ${name}, ${type=="" || type==null || type==undefined ? "user":type})
         ON CONFLICT (userid) 
-        DO UPDATE SET email = ${email}, name = ${name}, type = ${type}
+        DO UPDATE SET email = ${email}, name = ${name}, type = ${type=="" || type==null || type==undefined ? "user":type}
       `;
-
+console.log("saved user ")
       return res.status(200).json({ success: true, id: userId });
     } catch (error) {
       console.error(error);

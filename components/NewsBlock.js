@@ -8,9 +8,29 @@ export default function NewsBlock({
   description,
   location,
   image,
+  userid,
+  usertype,
   date,
   time,
+  status
 }) {
+  const handledispatch = async()=>{
+    console.log(userid)
+    const res = await fetch("/api/postunits", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId:userid
+      }),
+    });
+    if (res.ok) {
+      alert("Units dispatched")
+    } else {
+      console.error("Failed to update user type:", res.statusText);
+    }
+  }
   return (
     <div className="flex flex-row p-2 w-full">
       <Skeleton isLoaded={isLoaded} className="rounded-lg">
@@ -38,6 +58,11 @@ export default function NewsBlock({
         </Skeleton>
         <Skeleton isLoaded={isLoaded} className="rounded-lg">
           <h5>{time}</h5>
+        </Skeleton>
+        <Skeleton isLoaded={isLoaded} className="rounded-lg">
+        {status==0 && usertype ==="department" && 
+ <button className="text-xl text-white bg-black p-3 rounded-xl" onClick={handledispatch}>Dispatch</button>
+        }
         </Skeleton>
       </div>
     </div>

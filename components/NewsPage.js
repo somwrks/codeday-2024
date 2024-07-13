@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Spinner } from "@nextui-org/react";
 import NewsBlock from "./NewsBlock";
 
-export default function NewsPage() {
+export default function NewsPage({usertype}) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [news, setNews] = useState([]);
 
@@ -47,7 +47,10 @@ export default function NewsPage() {
       {news.length > 0 ? (
         news.map((e, i) => (
           <NewsBlock
+          usertype={usertype}
             key={i}
+            status={e.status}
+            userid = {e.userid}
             isLoaded={isLoaded}
             title={e.title}
             description={e.description}
