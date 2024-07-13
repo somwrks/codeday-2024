@@ -40,3 +40,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     background: url("../public/drake.png");
     background-size: 100% 100%;
 }
+.bg-articles {
+    background: url("../public/articles.png");
+    background-size: 100% 110%;
+}

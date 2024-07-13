@@ -72,7 +72,6 @@ export default function SOS({ usertype }) {
       console.error("Error posting news:", error);
     }
   };
-console.log(usertype)
   return (
     <>
       {usertype === "department" ? (

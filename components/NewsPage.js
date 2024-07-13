@@ -61,7 +61,7 @@ export default function NewsPage({ usertype }) {
           </div>
         ))}
       </div>
-      {news.length > 0 ? (
+      { usertype ==="department"? news.length > 0 ? (
         news.map((e, i) =>
           filtersostype != "All" ? e.title == filtersostype ? (
             <>
@@ -104,7 +104,7 @@ export default function NewsPage({ usertype }) {
         <div className="flex flex-col w-full items-center mt-32 h-56">
           <p>No News Available</p>
         </div>
-      )}
+      ): <div className="flex flex-col w-full h-96 bg-articles"></div>}
     </div>
   );
 }
