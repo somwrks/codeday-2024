@@ -211,7 +211,7 @@ export default function Navigate({
         </div>
       )}
       
-      <div id="map" style={{ width: "100%", height: "95vh" }}></div>
+      <div id="map" style={{ zIndex:0, width: "100%", height: "100vh" }}></div>
     </>
   );
 }

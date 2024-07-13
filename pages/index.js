@@ -1,6 +1,7 @@
 // pages/index.js
 import Navbar from "@/components/Navbar";
 import NewsPage from "@/components/NewsPage";
+import Topbar from "@/components/Topbar";
 import {
   SignInButton,
   SignOutButton,
@@ -70,18 +71,9 @@ export default function Home({ usertype,setUsertype }) {
   return (
     <>
       <SignedIn>
+      <Topbar/>
         <div className="flex flex-col min-h-screen text-black">
-          <div className="flex p-3 text-center text-black flex-col space-y-3 text-2xl">
-            Welcome
-            {isLoaded && isSignedIn && (
-              <p>
-                Name: {user.fullName}
-                <br /> Email: {user.emailAddresses[0].emailAddress}
-              </p>
-            )}
-            <br />
-            You are a {usertype}
-          </div>
+         
           <NewsPage usertype={usertype} />
         </div>
         <Navbar />

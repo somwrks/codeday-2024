@@ -76,12 +76,12 @@ export default function SOS({ usertype }) {
   return (
     <>
       {usertype === "department" ? (
-        <div style={{ position: "relative", width: "100vw", height: "95vh" }}>
+        <div style={{ position: "relative", width: "100vw", height: "100vh" }}>
         <MapContainer news={news} />
         </div>
       ) : (
         <>
-          <div style={{ position: "relative", width: "100vw", height: "95vh" }}>
+          <div style={{ position: "relative", width: "100vw", height: "100vh" }}>
             <Navigate
               handleSubmit={handleSubmit}
               setDescription={setDescription}
