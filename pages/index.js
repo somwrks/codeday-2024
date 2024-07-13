@@ -1,5 +1,6 @@
-import Image from "next/image";
-import { Inter } from "next/font/google";
+import Navbar from "@/components/Navbar";
+import NewsBlock from "@/components/NewsBlock";
+import NewsPage from "@/components/NewsPage";
 import {
   SignInButton,
   SignOutButton,
@@ -9,11 +10,30 @@ import {
 } from "@clerk/nextjs";
 import { useEffect } from "react";
 
-const inter = Inter({ subsets: ["latin"] });
-
 export default function Home({ usertype, setUsertype }) {
   const { user, isLoaded, isSignedIn } = useUser();
 
+  useEffect(() => {
+    if (isSignedIn) {
+      const name = user.fullName;
+      const email = user.emailAddresses[0].emailAddress;
+
+      fetch("/api/postuser", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          usertype,
+        }),
+      });
+    }
+    else{
+      setUsertype("")
+    }
+  }, [user, usertype, isSignedIn,setUsertype]);
 
   return (
     <>
@@ -30,38 +50,27 @@ export default function Home({ usertype, setUsertype }) {
             <br />
             You are a {usertype}
           </div>
-          <div
-            onClick={() => setUsertype("")}
-            className="bg-black p-3 text-white"
-          >
-            <SignOutButton />
-          </div>
+          <NewsPage />
         </div>
+        <Navbar />
       </SignedIn>
       <SignedOut>
-      
-        <div className="flex flex-col w-full space-y-4   bg-white min-h-screen">
+        <div className="flex flex-col w-full space-y-4 bg-white min-h-screen">
           <div className="flex flex-col p-4">
-            <h1 className="text-4xl text-black text-center ">InSafe</h1>
+            <h1 className="text-4xl text-black text-center">InSafe</h1>
           </div>
-          <div  onClick={() => setUsertype("department")} className="flex flex-row gap-3 text-xl">
-            <div>Department</div>
+          {["department", "user"].map((type) => (
             <div
-              
-              className="bg-black p-3 text-white"
+              key={type}
+              onClick={() => setUsertype(type)}
+              className="flex flex-row gap-3 text-xl"
             >
-              <SignInButton />
+              <div>{type.charAt(0).toUpperCase() + type.slice(1)}</div>
+              <div className="bg-black p-3 text-white">
+                <SignInButton />
+              </div>
             </div>
-          </div>
-          <div onClick={() => setUsertype("user")} className="flex flex-row gap-3 text-xl">
-            <div>User</div>
-            <div
-              
-              className="bg-black p-3 text-white"
-            >
-              <SignInButton />
-            </div>
-          </div>
+          ))}
         </div>
       </SignedOut>
     </>
