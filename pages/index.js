@@ -71,7 +71,7 @@ export default function Home({ usertype,setUsertype }) {
   return (
     <>
       <SignedIn>
-      <Topbar/>
+      <Topbar usertype={usertype}/>
         <div className="flex flex-col  text-black">
          
           <NewsPage usertype={usertype} />

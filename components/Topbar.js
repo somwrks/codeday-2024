@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React from "react";
 
-export default function Topbar() {
+export default function Topbar({usertype}) {
   return (
     <div className="flex flex-col gap-5 p-3 w-full">
 
@@ -9,7 +9,7 @@ export default function Topbar() {
       <div className="flex"></div>
       <div className="flex flex-row gap-2">
         <Image src={"/marker-icon.svg"} width={20} height={20} alt="Map" />
-        <h1>Lucknow</h1>
+        <h1>{usertype=="user" ? "Lucknow" : "DEPARTMENT"}</h1>
       </div>
       <div className="flex">
 
