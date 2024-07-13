@@ -12,6 +12,7 @@ export default function NewsBlock({
   usertype,
   date,
   time,
+  sostype,
   status
 }) {
   const handledispatch = async()=>{
@@ -34,30 +35,30 @@ export default function NewsBlock({
   return (
     <div className="flex flex-row p-2 w-full">
       <Skeleton isLoaded={isLoaded} className="rounded-lg">
-        <div className="flex flex-col w-1/2">
+        <div className="flex flex-col ">
           <Image
             src={image ? image : "/vercel.svg"}
-            width={200}
-            height={200}
+            width={300}
+            height={300}
             alt="Image"
           />
         </div>
       </Skeleton>
-      <div className="flex space-y-2 flex-col p-2">
+      <div className="flex space-y-2 flex-col w-full p-2">
         <Skeleton isLoaded={isLoaded} className="rounded-lg">
-          <h1>{title}</h1>
+          <h1 className="text-2xl font-semibold">{title}</h1>
         </Skeleton>
         <Skeleton isLoaded={isLoaded} className="rounded-lg">
-          <p>{description}</p>
+          <p className="text-xl">{description}</p>
         </Skeleton>
         <Skeleton isLoaded={isLoaded} className="rounded-lg">
-          <h3>{location}</h3>
+          <h3 className="text-md">{location}</h3>
         </Skeleton>
         <Skeleton isLoaded={isLoaded} className="rounded-lg">
-          <h4>{date}</h4>
+          <h4 className="text-md">{date}</h4>
         </Skeleton>
         <Skeleton isLoaded={isLoaded} className="rounded-lg">
-          <h5>{time}</h5>
+          <h5 className="text-md">{time}</h5>
         </Skeleton>
         <Skeleton isLoaded={isLoaded} className="rounded-lg">
         {status==0 && usertype ==="department" && 

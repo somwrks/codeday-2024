@@ -7,10 +7,10 @@ import React from "react";
 export default function Navbar() {
   const a = useRouter();
   return (
-    <div className="flex justify-between z-50 fixed bottom-5 left-1/4 w-2/4  px-12 py-2 rounded-xl bg-black text-white">
+    <div className="flex justify-between z-50 fixed bottom-5 left-1/4 w-2/4  px-12 py-2 rounded-3xl bg-gradient-to-r from-[#0F262C] to-[#327E92] text-white">
       <Link href="/">
         <Image
-          className={` ${a.pathname === "/" && "scale-125"}`}
+          className={`hover:scale-125 ${a.pathname === "/" && "scale-125"}`}
           src={"/home.svg"}
           width={30}
           height={50}
@@ -19,14 +19,16 @@ export default function Navbar() {
       </Link>
       <Link href="/sos">
         <Image
-          className={` ${a.pathname === "/sos" && "scale-125"}`}
+          className={`hover:scale-125 ${a.pathname === "/sos" && "scale-125"}`}
           src={"/sos.svg"}
           width={30}
           height={50}
           alt="sos"
         />
       </Link>
-      <UserButton />
+      <div className="hover:scale-125">
+        <UserButton />
+      </div>
     </div>
   );
 }

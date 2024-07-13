@@ -72,12 +72,12 @@ export default function SOS({ usertype }) {
       console.error("Error posting news:", error);
     }
   };
-
+console.log(usertype)
   return (
     <>
       {usertype === "department" ? (
-        <div style={{ position: "relative", width: "100vw", height: "100vh" }}>
-        <MapContainer news={news} />
+        <div style={{ position: "relative",zIndex: 0 , width: "100vw", height: "100vh" }}>
+        <MapContainer  news={news} />
         </div>
       ) : (
         <>

@@ -1,7 +1,7 @@
 import { sql } from "@vercel/postgres";
 import { getAuth } from "@clerk/nextjs/server";
-import dayjs from 'dayjs';
-import crypto from 'crypto';
+import dayjs from "dayjs";
+import crypto from "crypto";
 
 function generateUniqueId() {
   return crypto.randomUUID();
@@ -14,8 +14,8 @@ export default async function handler(req, res) {
 
   console.log(req.body);
   const { location, description, title } = req.body;
-  const currentTime = dayjs().format('HH:mm:ss');
-  const currentDate = dayjs().format('YYYY-MM-DD');
+  const currentTime = dayjs().format("HH:mm:ss");
+  const currentDate = dayjs().format("YYYY-MM-DD");
 
   try {
     const { userId } = await getAuth(req);
@@ -25,7 +25,7 @@ export default async function handler(req, res) {
     }
 
     const newsId = generateUniqueId();
-    const defaultImage = "/vercel.svg"; // Set a default image URL if needed
+    const defaultImage = `/${title.toLowerCase()}.png`;
 
     // Ensure the news table exists
     await sql`
@@ -44,7 +44,9 @@ export default async function handler(req, res) {
     // Insert the new news entry
     await sql`
       INSERT INTO news (newsid, userid, location, time, image, date, description, title)
-      VALUES (${newsId}, ${userId}, ${JSON.stringify(location)}, ${currentTime}, ${defaultImage}, ${currentDate}, ${description}, ${title})
+      VALUES (${newsId}, ${userId}, ${JSON.stringify(
+      location
+    )}, ${currentTime}, ${defaultImage}, ${currentDate}, ${description}, ${title})
     `;
 
     return res.status(200).json({ success: true, id: newsId });

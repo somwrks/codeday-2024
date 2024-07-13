@@ -2,13 +2,41 @@
 @tailwind components;
 @tailwind utilities;
 
-body{
+* {
+    transition: all 0.4s ease-in-out;
+}
+
+body {
     background-color: white;
     color: black;
 }
-.bg-home{
+
+html, body {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+html::-webkit-scrollbar, body::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari, and Opera */
+}
+.fade{
+    animation: fade 0.5s ease-in-out;
+}
+@keyframes fade {
+    0%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+
+.bg-home {
     background: url("../public/bg.png");
     background-size: 98% 102%;
+}
 
-    
+.bg-drake {
+    background: url("../public/drake.png");
+    background-size: 100% 100%;
 }

@@ -7,6 +7,7 @@ import "leaflet-routing-machine";
 import markerIcon from "../public/marker-icon.svg";
 import markerIcon2x from "../public/marker-icon-2x.svg";
 import markerShadow from "../public/marker-shadow.svg";
+import { Button } from "@nextui-org/react";
 
 // Set default marker icon
 L.Icon.Default.mergeOptions({
@@ -44,6 +45,9 @@ export default function Navigate({
 }) {
   const [userPosition, setUserPosition] = useState(null);
   const [formVisible, setFormVisible] = useState(false);
+const [unsafe, setUnsafe] = useState(false)
+
+  const [isneeded, setIsneeded] = useState(false);
   const [secondaryPosition, setSecondaryPosition] = useState(null);
   const [estimatedTime, setEstimatedTime] = useState(null);
   useEffect(() => {
@@ -53,10 +57,9 @@ export default function Navigate({
         const data = await response.json();
         if (!data.units.status) {
           setFormVisible(true);
-          
         } else {
           setFormVisible(false);
-          setPrompt(false)
+          setPrompt(false);
         }
       } catch (error) {
         console.error("Error fetching units:", error);
@@ -64,7 +67,7 @@ export default function Navigate({
       }
     }
     checkUnits();
-  }, []);
+  }, [setFormVisible, setIsneeded]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -82,8 +85,7 @@ export default function Navigate({
               const minDistance = 0.01; // Minimum distance in degrees (approx. 1.1 km)
               const maxDistance = 0.02; // Maximum distance in degrees (approx. 2.2 km)
               const distance =
-                minDistance +
-                Math.random() * (maxDistance - minDistance);
+                minDistance + Math.random() * (maxDistance - minDistance);
               const angle = Math.random() * 2 * Math.PI;
               const offsetX = distance * Math.cos(angle);
               const offsetY = distance * Math.sin(angle);
@@ -104,6 +106,7 @@ export default function Navigate({
       );
     }
   }, [formVisible]);
+  const [pageno, setPageno] = useState(0);
 
   useEffect(() => {
     if (userPosition && secondaryPosition) {
@@ -155,10 +158,38 @@ export default function Navigate({
   if (!userPosition) {
     return <div>Loading map...</div>;
   }
-
+  const options = ["All", "Fire", "Accident", "Assault", "Theft", "Emerge"];
   return (
     <>
-      {formVisible ? (
+      {formVisible ? 
+        <>
+        {unsafe &&
+        <div className="flex fade p-3 flex-col w-1/2 left-1/4 top-1/4 fixed z-50 bg-white rounded-3xl text-center font-semibold gap-3">
+          <h1 className="text-2xl">Caution</h1>
+          <p>Unsafe mode tracks your live location and sends intel to nearby cops constantly to ensure you&apos;re safe </p>
+          <Button
+                onClick={() => setUnsafe(false)}
+                className="flex-col fade font-semibold fade  z-50  rounded-xl w-full flex py-3 px-7 bg-gray-600 text-white"
+              >
+                Continue
+              </Button>
+        </div>}
+        {!isneeded && (
+          <div className="flex flex-row space-x-2">
+              <Button
+                onClick={() => setUnsafe(true)}
+                className="flex-col font-semibold fade bottom-24 right-2/4 absolute z-50  rounded-xl w-1/4 flex py-3 px-7 bg-gray-600 text-white"
+              >
+                UNSAFE
+              </Button>
+              <Button
+                onClick={() => setIsneeded(true)}
+                className="flex-col fade font-semibold bottom-24 left-2/4 absolute z-50  rounded-xl w-1/4 flex py-3 px-7 bg-red-600 text-white"
+              >
+                EMERGENCY
+              </Button>
+          </div>
+            )}
         <div
           style={{
             position: "fixed",
@@ -167,30 +198,58 @@ export default function Navigate({
             left: "50%",
             transform: "translate(-50%, -50%)",
             background: "white",
-            padding: "20px",
             borderRadius: "8px",
             boxShadow: "0 2px 10px rgba(0,0,0,0.2)",
           }}
         >
-          <form onSubmit={handleSubmit}>
-            <input
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="Title"
-              required
-            />
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Description"
-              required
-            />
-            <button type="submit">Submit</button>
+          
+          <form className={`${isneeded ? "p-3":""} space-y-3 fade`} onSubmit={handleSubmit}>
+            {isneeded && pageno == 0 && (
+              <><div className="flex fade flex-col gap-3">
+                  <select
+                    value={title}
+                    className="p-3"
+                    onChange={(e) => setTitle(e.target.value)}
+                    required
+                  >
+                    <option value="" disabled>
+                      Select an option
+                    </option>
+                    {options.map(
+                      (option, index) => index > 0 && (
+                        <option className="p-3 " key={index} value={option}>
+                          {option}
+                        </option>
+                      )
+                    )}
+                  </select>
+                  {title.length != 0 && (
+                    <>
+                      <textarea
+                        className="p-2"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        placeholder="Any details you want to include?"
+                        required />
+                      <Button
+                        type="submit"
+                        className="py-2 px-4 text-white bg-green-800 rounded-full"
+                      >
+                        Submit
+                      </Button>
+                    </>
+                  )}
+                </div>
+                <Button
+                  onClick={() => setIsneeded(false)}
+                  className="flex-col   z-50 w-full  rounded-full  flex py-2 px-4 bg-gray-500 text-white"
+                >
+                    Cancel
+                  </Button></>
+            )}
           </form>
         </div>
-      ) : (
-
+        </>  : (
         <div
           style={{
             position: "fixed",
@@ -205,14 +264,11 @@ export default function Navigate({
           }}
         >
           Help is on the way!
-          {estimatedTime && (
-            <p>Arriving in {estimatedTime} minutes!</p>
-          )}
+          {estimatedTime && <p>Arriving in {estimatedTime} minutes!</p>}
         </div>
       )}
-      
-      <div id="map" style={{ zIndex:0, width: "100%", height: "100vh" }}></div>
+
+      <div id="map" style={{ zIndex: 0, width: "100%", height: "100vh" }}></div>
     </>
   );
 }
-
